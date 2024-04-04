@@ -54,12 +54,12 @@ Digital Detective provides detailed information such as :
   * Top 1000 Ports
  
 ## Installation
-
+```bash
 git clone https://github.com/hitanshkadakia/DigitalDetective.git
 cd DigitalDetective
 cd digital detective
 pip3 install -r requirements.txt
-
+```
 
 
 # Check headers
