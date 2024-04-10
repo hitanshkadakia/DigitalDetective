@@ -62,26 +62,6 @@ pip3 install -r requirements.txt
 ```
 
 
-# Check headers
-
-python3 finalrecon.py --headers (url)
-
-# Check ssl Certificate
-
-python3 finalrecon.py --sslinfo (url)
-
-# Check whois Information
-
-python3 finalrecon.py --whois (url)
-
-# Crawl Target
-
-python3 finalrecon.py --crawl (url)
-
-# Directory Searching
-
-python3 finalrecon.py --dir (url) -e txt,php -w /path/to/wordlist
-
 # full scan
 
 python3 finalrecon.py --full (url)
