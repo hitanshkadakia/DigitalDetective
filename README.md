@@ -66,6 +66,3 @@ pip3 install -r requirements.txt
 
 python3 finalrecon.py --full (url)
 
-
-
-https://github.com/hitanshkadakia/DigitalDetective.git
