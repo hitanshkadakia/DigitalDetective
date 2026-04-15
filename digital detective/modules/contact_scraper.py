@@ -1,37 +1,40 @@
-import requests
 import re
-from bs4 import BeautifulSoup
+import asyncio
+from collections import defaultdict
 
 class ContactScraper:
-    def __init__(self, url):
-        self.url = url
-        self.names = []
-        self.emails = []
-        self.phone_numbers = []
+    def __init__(self, text):
+        self.text = text
 
-    def scrape(self):
-        response = requests.get(self.url)
-        if response.status_code == 200:
-            self.extract_contacts(response.text)
-        else:
-            print(f'Failed to retrieve {self.url}')
+    async def extract_emails(self):
+        email_pattern = r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}'
+        emails = re.findall(email_pattern, self.text)
+        return list(set(emails))  # Remove duplicates
 
-    def extract_contacts(self, html):
-        soup = BeautifulSoup(html, 'html.parser')
+    async def extract_phone_numbers(self):
+        phone_pattern = r'(?:(?:\+?\d{1,3}[ -]?)(?:\(?\d{1,4}?\)?[ -]?)?\d{1,4}[ -]?\d{1,4}[ -]?\d{1,9})'
+        phone_numbers = re.findall(phone_pattern, self.text)
+        return list(set(phone_numbers))  # Remove duplicates
 
-        # Extract names (simple regex for demonstration)
-        self.names += re.findall(r'\b[A-Z][a-z]+ [A-Z][a-z]+\b', soup.get_text())
+    async def extract_names(self):
+        # Simulating name extraction with a simple pattern (this could be refined)
+        name_pattern = r'([A-Z][a-z]+(?: [A-Z][a-z]+)*)'
+        names = re.findall(name_pattern, self.text)
+        return list(set(names))  # Remove duplicates
 
-        # Extract emails
-        self.emails += re.findall(r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}', soup.get_text())
+    async def contact_stats(self):
+        emails = await self.extract_emails()
+        phone_numbers = await self.extract_phone_numbers()
+        names = await self.extract_names()
+        return {
+            'email_count': len(emails),
+            'phone_number_count': len(phone_numbers),
+            'name_count': len(names),
+            'emails': emails,
+            'phone_numbers': phone_numbers,
+            'names': names,
+        }
 
-        # Extract phone numbers (simple pattern for demo)
-        self.phone_numbers += re.findall(r'\+?[0-9][0-9\s()-]{7,}[0-9]', soup.get_text())
-
-    def get_contacts(self):
-        return {'names': self.names, 'emails': self.emails, 'phone_numbers': self.phone_numbers}
-
-# Example usage
-# scraper = ContactScraper('https://example.com')
-# scraper.scrape()
-# print(scraper.get_contacts())
+# Example usage:
+# scraper = ContactScraper(text)
+# asyncio.run(scraper.contact_stats())
